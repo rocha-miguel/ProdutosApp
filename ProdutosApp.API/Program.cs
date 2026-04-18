@@ -1,16 +1,21 @@
+using Microsoft.EntityFrameworkCore;
+using ProdutosApp.Infra.Data.Contexts;
+using ProdutosApp.Infra.Data.Repositories;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
 builder.Services.AddControllers();
 
-builder.Services.AddOpenApi();
+builder.Services.AddDbContext<DataContext>(options =>
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("BDProdutosAPI")));
 
-var app = builder.Build();
+builder.Services.AddScoped<ProdutoRepository>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddOpenApi();
 
 var allowedOrigins = builder.Configuration
     .GetSection("Cors:AllowedOrigins")
@@ -24,6 +29,8 @@ builder.Services.AddCors(options => {
     });
 });
 
+var app = builder.Build();
+
 if (app.Environment.IsDevelopment()) {
     app.MapOpenApi();
 }
@@ -32,6 +39,8 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 app.MapScalarApiReference(s => s.WithTheme(ScalarTheme.DeepSpace));
+
+app.UseCors("AngularApp");
 
 app.UseAuthorization();
 
