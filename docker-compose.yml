@@ -1,17 +1,15 @@
 services:
-  mysql:
-    image: mysql:8.4
-    container_name: mysql-db
-    restart: always
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sqlserver-db
+    restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: root123
-      MYSQL_DATABASE: BDProdutosAPI
-      MYSQL_USER: usuario
-      MYSQL_PASSWORD: senha123
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "SuaSenhaForte123!"
     ports:
-      - "3307:3306"
+      - "1433:1433"
     volumes:
-      - mysql_data:/var/lib/mysql
+      - sqlserver_data:/var/opt/mssql
 
 volumes:
-  mysql_data:
+  sqlserver_data:

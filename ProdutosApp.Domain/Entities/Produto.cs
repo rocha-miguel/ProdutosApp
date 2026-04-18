@@ -2,6 +2,7 @@
 
 using ProdutosApp.Domain.Enums;
 
+
 namespace ProdutosApp.Domain.Entities {
     public class Produto {
 
@@ -16,5 +17,7 @@ namespace ProdutosApp.Domain.Entities {
         public DateTime DataHoraCadastro { get; set; } = DateTime.Now;
 
         public CategoriaProduto Categoria { get; set; }
+
+        public StatusProduto Status { get; set; }
     }
 }
