@@ -1,15 +1,50 @@
 services:
+
+  api:
+    build: 
+      context: .
+      dockerfile: ProdutosAPP.API/Dockerfile
+    container_name: api
+    ports:
+      - "5000:8080"
+    depends_on:
+      - sqlserver
+    networks:
+      - produtos_network
+
+
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: sqlserver-db
     restart: unless-stopped
     environment:
       ACCEPT_EULA: "Y"
-      MSSQL_SA_PASSWORD: "SuaSenhaForte123!"
+      MSSQL_SA_PASSWORD: "Admin@2026"
     ports:
-      - "1433:1433"
+      - "1434:1433"
     volumes:
       - sqlserver_data:/var/opt/mssql
+    networks:
+      - produtos_network
+
+  adminer:
+    image: adminer:latest
+    container_name: adminer
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    volumes:
+      - adminer_data:/var/www/html
+    networks:
+      - produtos_network
+    depends_on:
+      - sqlserver
 
 volumes:
   sqlserver_data:
+  adminer_data:
+
+networks:
+  produtos_network:
+    driver: bridge
+
